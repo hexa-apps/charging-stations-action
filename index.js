@@ -6,8 +6,6 @@ require('dotenv').config();
 
 const emptyChar = '⠀';
 
-// const client = new twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
-
 fetch("http://udim.koeri.boun.edu.tr/zeqmap/xmlt/son24saat.xml")
     .then(res => res.text())
     .then(res => evalRes(res))
@@ -40,7 +38,6 @@ let evalRes = (res) => {
                 return;
             }
             writeSmsToFile(smsText);
-            sendSmsToRecievers(smsText);
         })
         .catch(err => console.log(err));
 }
@@ -124,18 +121,4 @@ let writeSmsToFile = (sms) => {
         if (err) return console.log(err);
         console.log('Written sms.txt');
     });
-}
-
-let sendSmsToRecievers = (smsText) => {
-    // const receivers = process.env.MSISDN_RECEIVERS_DELIMITED_WITH_SEMICOLON;
-    // receivers.split(';').forEach(receiver => {
-    //     client.messages.create({
-    //             to: receiver,
-    //             from: process.env.MSISDN_SENDER,
-    //             body: smsText
-    //         })
-    //         .then(message => console.log('Sent', 'SID', message.sid))
-    //         .catch(error => console.log('Sending error', error));
-    // });
-
 }
