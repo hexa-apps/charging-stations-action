@@ -1,12 +1,12 @@
 const cheerio = require('cheerio');
 const fetch = require('node-fetch');
-const twilio = require('twilio');
+// const twilio = require('twilio');
 const fs = require('fs');
 require('dotenv').config();
 
 const emptyChar = '⠀';
 
-const client = new twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
+// const client = new twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
 
 fetch("http://udim.koeri.boun.edu.tr/zeqmap/xmlt/son24saat.xml")
     .then(res => res.text())
@@ -127,15 +127,15 @@ let writeSmsToFile = (sms) => {
 }
 
 let sendSmsToRecievers = (smsText) => {
-    const receivers = process.env.MSISDN_RECEIVERS_DELIMITED_WITH_SEMICOLON;
-    receivers.split(';').forEach(receiver => {
-        client.messages.create({
-                to: receiver,
-                from: process.env.MSISDN_SENDER,
-                body: smsText
-            })
-            .then(message => console.log('Sent', 'SID', message.sid))
-            .catch(error => console.log('Sending error', error));
-    });
+    // const receivers = process.env.MSISDN_RECEIVERS_DELIMITED_WITH_SEMICOLON;
+    // receivers.split(';').forEach(receiver => {
+    //     client.messages.create({
+    //             to: receiver,
+    //             from: process.env.MSISDN_SENDER,
+    //             body: smsText
+    //         })
+    //         .then(message => console.log('Sent', 'SID', message.sid))
+    //         .catch(error => console.log('Sending error', error));
+    // });
 
 }
