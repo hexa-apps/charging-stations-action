@@ -103,15 +103,18 @@ const getEarthquakesBySelectedCriteria = (newEarthquakes) => {
   const foundEarthquakes = [];
   const cities = process.env.CITIES_DELIMITED_WITH_SEMICOLON.split(";");
   const minMagnitude = process.env.MIN_MAGNITUDE;
+  // newEarthquakes.forEach((earthquake) => {
+  //   cities.forEach((city) => {
+  //     if (
+  //       (city === "*" || earthquake.location.includes(city)) &&
+  //       earthquake.mag >= minMagnitude
+  //     ) {
+  //       foundEarthquakes.push(earthquake);
+  //     }
+  //   });
+  // });
   newEarthquakes.forEach((earthquake) => {
-    cities.forEach((city) => {
-      if (
-        (city === "*" || earthquake.location.includes(city)) &&
-        earthquake.mag >= minMagnitude
-      ) {
-        foundEarthquakes.push(earthquake);
-      }
-    });
+    foundEarthquakes.push(earthquake);
   });
   return foundEarthquakes;
 };
