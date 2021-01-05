@@ -124,7 +124,7 @@ let createTweetText = (earthquake) => {
   if (date.includes(" ")) {
     date = date.split(" ")[1];
   }
-  return `💢 ${earthquake.location}'de #deprem Büyüklük: ${earthquake.mag} Zaman: ${date}`;
+  return `#Deprem\n#HAZTURK\nBüyüklük: ${earthquake.mag}\nKonum: ${earthquake.location}\nZaman: ${date}\nDerinlik: ${earthquake.depth} km\nEnlem: ${earthquake.lat}°\nBoylam: ${earthquake.lng}°\n\nhttps://rebrand.ly/HAZTURK`;
 };
 
 let writeTweetToFile = (tweet) => {
