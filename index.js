@@ -49,7 +49,8 @@ let evalRes = (res) => {
 
 let sendNewEarthQuakesTweets = (earthquakes) => {
   earthquakes.forEach((earthquake) => {
-    sendTweet(createTweetText(earthquake), generateImageUrl(earthquake));
+    sendTweet(createTweetText(earthquake));
+    // sendTweet(createTweetText(earthquake), generateImageUrl(earthquake));
   });
 };
 
