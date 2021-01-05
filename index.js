@@ -47,6 +47,12 @@ let evalRes = (res) => {
     .catch((err) => console.log(err));
 };
 
+let sendNewEarthQuakesTweets = (earthquakes) => {
+  earthquakes.forEach((earthquake) => {
+    sendTweet(createTweetText(earthquake), generateImageUrl(earthquake));
+  });
+};
+
 let getEarthquakesDOM = ($) => {
   return $("earhquake");
 };
@@ -135,7 +141,7 @@ let sendTweet = (tweetText, imageUrl) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        "value1" : tweetText,
+        "value1": tweetText,
         // "value1" : imageUrl,
         // "value2" : tweetText
       }),
@@ -146,28 +152,28 @@ let sendTweet = (tweetText, imageUrl) => {
   writeTweetToFile(tweetText);
 };
 
-let createSmsText = (earthquakes) => {
-  let smsTextArray = [];
-  earthquakes.forEach((earthquake) => {
-    smsTextArray.push(createSmsLine(earthquake));
-  });
-  if (smsTextArray.length === 0) return "";
-  return `${emptyChar}\n${emptyChar}\n${smsTextArray.join(
-    "\n"
-  )}\n${emptyChar}\n${emptyChar}`;
-};
+// let createSmsText = (earthquakes) => {
+//   let smsTextArray = [];
+//   earthquakes.forEach((earthquake) => {
+//     smsTextArray.push(createSmsLine(earthquake));
+//   });
+//   if (smsTextArray.length === 0) return "";
+//   return `${emptyChar}\n${emptyChar}\n${smsTextArray.join(
+//     "\n"
+//   )}\n${emptyChar}\n${emptyChar}`;
+// };
 
-let createSmsLine = (earthquake) => {
-  let date = earthquake.date;
-  if (date.includes(" ")) {
-    date = date.split(" ")[1];
-  }
-  return `💢 ${earthquake.mag} ${date} ${earthquake.location}`;
-};
+// let createSmsLine = (earthquake) => {
+//   let date = earthquake.date;
+//   if (date.includes(" ")) {
+//     date = date.split(" ")[1];
+//   }
+//   return `💢 ${earthquake.mag} ${date} ${earthquake.location}`;
+// };
 
-let writeSmsToFile = (sms) => {
-  fs.writeFile("sms.txt", sms, function (err) {
-    if (err) return console.log(err);
-    console.log("Written sms.txt");
-  });
-};
+// let writeSmsToFile = (sms) => {
+//   fs.writeFile("sms.txt", sms, function (err) {
+//     if (err) return console.log(err);
+//     console.log("Written sms.txt");
+//   });
+// };
