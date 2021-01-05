@@ -39,7 +39,7 @@ let evalRes = (res) => {
       // if (smsText.length === 0) {
       if (earthquakes.length === 0) {
         console.log("Earthquake not happened");
-        writeTweetToFile("");
+        writeTweetToFile("Earthquake not happened");
         return;
       }
       // writeSmsToFile(smsText);
