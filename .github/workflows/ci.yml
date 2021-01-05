@@ -4,13 +4,13 @@ on:
   push:
   schedule:
     # Execute CI at every 5th minute
-    - cron: '* * * * *'
+    - cron: '*/5 * * * *'
 
 jobs:
   build:
     runs-on: ubuntu-latest
     name: Get Earthquakes
-    #if: "!contains(toJSON(github.event.commits.*.message), '[skip-ci]')"
+    if: "!contains(toJSON(github.event.commits.*.message), '[skip-ci]')"
     strategy:
       matrix:
         node-version: [14.x]
