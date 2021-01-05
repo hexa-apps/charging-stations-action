@@ -135,7 +135,7 @@ let sendTweet = (tweetText, imageUrl) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        value1: tweetText,
+        "value1" : tweetText,
         // "value1" : imageUrl,
         // "value2" : tweetText
       }),
