@@ -1,5 +1,6 @@
 const cheerio = require("cheerio");
 const fetch = require("node-fetch");
+const request = require("request");
 const fs = require("fs");
 require("dotenv").config();
 
@@ -49,7 +50,8 @@ let evalRes = (res) => {
 
 let sendNewEarthQuakesTweets = (earthquakes) => {
   earthquakes.forEach((earthquake) => {
-    sendTweet(createTweetText(earthquake));
+    sendNotification(earthquake);
+    // sendTweet(createTweetText(earthquake));
     // sendTweet(createTweetText(earthquake), generateImageUrl(earthquake));
   });
 };
@@ -114,18 +116,20 @@ const getEarthquakesBySelectedCriteria = (newEarthquakes) => {
   //   });
   // });
   newEarthquakes.forEach((earthquake) => {
-    foundEarthquakes.push(earthquake);
+    if(earthquake.mag >= minMagnitude) {
+      foundEarthquakes.push(earthquake);
+    }
   });
   return foundEarthquakes;
 };
 
-let createTweetText = (earthquake) => {
-  let date = earthquake.date;
-  if (date.includes(" ")) {
-    date = date.split(" ")[1];
-  }
-  return `#Deprem\n#HAZTURK\nBüyüklük: ${earthquake.mag}\nKonum: ${earthquake.location}\nZaman: ${date}\nDerinlik: ${earthquake.depth} km\nEnlem: ${earthquake.lat}°\nBoylam: ${earthquake.lng}°\n\nhttps://rebrand.ly/HAZTURK`;
-};
+// let createTweetText = (earthquake) => {
+//   let date = earthquake.date;
+//   if (date.includes(" ")) {
+//     date = date.split(" ")[1];
+//   }
+//   return `#Deprem\n#HAZTURK\nBüyüklük: ${earthquake.mag}\nKonum: ${earthquake.location}\nZaman: ${date}\nDerinlik: ${earthquake.depth} km\nEnlem: ${earthquake.lat}°\nBoylam: ${earthquake.lng}°\n\nhttps://rebrand.ly/HAZTURK`;
+// };
 
 let writeTweetToFile = (tweet) => {
   fs.writeFile("tweet.txt", tweet, function (err) {
@@ -134,50 +138,52 @@ let writeTweetToFile = (tweet) => {
   });
 };
 
-let sendTweet = (tweetText, imageUrl) => {
-  const webhookKey = process.env.IFTTT_WEBHOOKS_KEY;
-  const iftttEventName = process.env.IFTTT_EVENT;
-  fetch(
-    `https://maker.ifttt.com/trigger/${iftttEventName}/with/key/${webhookKey}`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
+let sendNotification = (earthquake) => {
+  const restKey = process.env.OS_REST_KEY;
+  const appId = process.env.OS_APP_ID;
+  request({
+    method: "POST",
+    uri: "https://onesignal.com/api/v1/notifications",
+    headers: {
+      "authorization": "Basic " + restKey,
+      "content-type": "application/json",
+    },
+    json: true,
+    body: {
+      "app_id": appId,
+      "contents": { en: `${earthquake.mag}-${earthquake.location}` },
+      "headings": { en: "DEPREM" },
+      "data": {
+        "date": earthquake.date,
+        "location": earthquake.location,
+        "lat": earthquake.lat,
+        "lng": earthquake.lng,
+        "mag": earthquake.mag,
+        "depth": earthquake.depth,
       },
-      body: JSON.stringify({
-        "value1": tweetText,
-        // "value1" : imageUrl,
-        // "value2" : tweetText
-      }),
-    }
-  )
-    .then((response) => console.log("Sent", response.text))
-    .catch((error) => console.log("Sending error", error));
-  writeTweetToFile(tweetText);
+    },
+  });
+  writeTweetToFile(`${earthquake.mag}-${earthquake.location}`);
 };
 
-// let createSmsText = (earthquakes) => {
-//   let smsTextArray = [];
-//   earthquakes.forEach((earthquake) => {
-//     smsTextArray.push(createSmsLine(earthquake));
-//   });
-//   if (smsTextArray.length === 0) return "";
-//   return `${emptyChar}\n${emptyChar}\n${smsTextArray.join(
-//     "\n"
-//   )}\n${emptyChar}\n${emptyChar}`;
-// };
-
-// let createSmsLine = (earthquake) => {
-//   let date = earthquake.date;
-//   if (date.includes(" ")) {
-//     date = date.split(" ")[1];
-//   }
-//   return `💢 ${earthquake.mag} ${date} ${earthquake.location}`;
-// };
-
-// let writeSmsToFile = (sms) => {
-//   fs.writeFile("sms.txt", sms, function (err) {
-//     if (err) return console.log(err);
-//     console.log("Written sms.txt");
-//   });
+// let sendTweet = (tweetText, imageUrl) => {
+//   const webhookKey = process.env.IFTTT_WEBHOOKS_KEY;
+//   const iftttEventName = process.env.IFTTT_EVENT;
+//   fetch(
+//     `https://maker.ifttt.com/trigger/${iftttEventName}/with/key/${webhookKey}`,
+//     {
+//       method: "POST",
+//       headers: {
+//         "Content-Type": "application/json",
+//       },
+//       body: JSON.stringify({
+//         "value1": tweetText,
+//         // "value1" : imageUrl,
+//         // "value2" : tweetText
+//       }),
+//     }
+//   )
+//     .then((response) => console.log("Sent", response.text))
+//     .catch((error) => console.log("Sending error", error));
+//   writeTweetToFile(tweetText);
 // };
