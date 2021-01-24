@@ -146,8 +146,8 @@ let sendNotification = (earthquake) => {
     {
       method: "POST",
       headers: {
-        "authorization": "Basic " + restKey,
-        "content-type": "application/json",
+        "Authorization": "Basic " + restKey,
+        "Content-Type": "application/json",
       },
       // json: true,
       body: JSON.stringify({
