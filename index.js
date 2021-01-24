@@ -1,6 +1,6 @@
 const cheerio = require("cheerio");
 const fetch = require("node-fetch");
-const request = require("request");
+// const request = require("request");
 const fs = require("fs");
 require("dotenv").config();
 
@@ -141,15 +141,16 @@ let writeTweetToFile = (tweet) => {
 let sendNotification = (earthquake) => {
   const restKey = process.env.OS_REST_KEY;
   const appId = process.env.OS_APP_ID;
-  request({
+  fetch(
+"https://onesignal.com/api/v1/notifications",
+{
     method: "POST",
-    uri: "https://onesignal.com/api/v1/notifications",
     headers: {
       "authorization": "Basic " + restKey,
       "content-type": "application/json",
     },
     json: true,
-    body: {
+    body: JSON.stringify({
       "app_id": appId,
       "contents": { en: `${earthquake.mag}-${earthquake.location}` },
       "headings": { en: "DEPREM" },
@@ -161,7 +162,7 @@ let sendNotification = (earthquake) => {
         "mag": earthquake.mag,
         "depth": earthquake.depth,
       },
-    },
+    }),
   });
   writeTweetToFile(`${earthquake.mag}-${earthquake.location}`);
 };
