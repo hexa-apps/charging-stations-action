@@ -151,16 +151,17 @@ let sendNotification = (earthquake) => {
       },
       // json: true,
       body: JSON.stringify({
-        "app_id": appId,
-        "contents": { en: `${earthquake.mag}-${earthquake.location}` },
-        "headings": { en: "DEPREM" },
-        "data": {
-          "date": earthquake.date,
-          "location": earthquake.location,
-          "lat": earthquake.lat,
-          "lng": earthquake.lng,
-          "mag": earthquake.mag,
-          "depth": earthquake.depth,
+        app_id: appId,
+        included_segments: ["Active Users"],
+        contents: { en: `${earthquake.mag}-${earthquake.location}` },
+        headings: { en: "DEPREM" },
+        data: {
+          date: earthquake.date,
+          location: earthquake.location,
+          lat: earthquake.lat,
+          lng: earthquake.lng,
+          mag: earthquake.mag,
+          depth: earthquake.depth,
         },
     }),
   })
