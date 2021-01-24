@@ -142,28 +142,30 @@ let sendNotification = (earthquake) => {
   const restKey = process.env.OS_REST_KEY;
   const appId = process.env.OS_APP_ID;
   fetch(
-"https://onesignal.com/api/v1/notifications",
-{
-    method: "POST",
-    headers: {
-      "authorization": "Basic " + restKey,
-      "content-type": "application/json",
-    },
-    json: true,
-    body: JSON.stringify({
-      "app_id": appId,
-      "contents": { en: `${earthquake.mag}-${earthquake.location}` },
-      "headings": { en: "DEPREM" },
-      "data": {
-        "date": earthquake.date,
-        "location": earthquake.location,
-        "lat": earthquake.lat,
-        "lng": earthquake.lng,
-        "mag": earthquake.mag,
-        "depth": earthquake.depth,
+    "https://onesignal.com/api/v1/notifications",
+    {
+      method: "POST",
+      headers: {
+        "authorization": "Basic " + restKey,
+        "content-type": "application/json",
       },
+      // json: true,
+      body: JSON.stringify({
+        "app_id": appId,
+        "contents": { en: `${earthquake.mag}-${earthquake.location}` },
+        "headings": { en: "DEPREM" },
+        "data": {
+          "date": earthquake.date,
+          "location": earthquake.location,
+          "lat": earthquake.lat,
+          "lng": earthquake.lng,
+          "mag": earthquake.mag,
+          "depth": earthquake.depth,
+        },
     }),
-  });
+  })
+    .then((response) => console.log("Sent", response.text))
+    .catch((error) => console.log("Sending error", error));
   writeTweetToFile(`${earthquake.mag}-${earthquake.location}`);
 };
 
