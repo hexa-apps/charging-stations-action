@@ -116,9 +116,9 @@ const getEarthquakesBySelectedCriteria = (newEarthquakes) => {
   //   });
   // });
   newEarthquakes.forEach((earthquake) => {
-  //  if(earthquake.mag >= minMagnitude) {
+    if(earthquake.mag >= minMagnitude) {
       foundEarthquakes.push(earthquake);
-  //  }
+    }
   });
   return foundEarthquakes;
 };
