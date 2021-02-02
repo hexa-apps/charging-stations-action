@@ -141,7 +141,7 @@ let writeTweetToFile = (tweet) => {
 let sendNotification = (earthquake) => {
   const restKey = process.env.OS_REST_KEY;
   const appId = process.env.OS_APP_ID;
-  let includedSegments = ["Active Users", "allmag"]
+  let includedSegments = ["allmag"]
   if (earthquake.mag >= 2.5) {
     includedSegments.push("twofivemag");
   } else if (earthquake.mag >= 4.5) {
