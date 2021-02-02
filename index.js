@@ -116,9 +116,9 @@ const getEarthquakesBySelectedCriteria = (newEarthquakes) => {
   //   });
   // });
   newEarthquakes.forEach((earthquake) => {
-    if(earthquake.mag >= minMagnitude) {
+    // if(earthquake.mag >= minMagnitude) {
       foundEarthquakes.push(earthquake);
-    }
+    // }
   });
   return foundEarthquakes;
 };
@@ -141,6 +141,12 @@ let writeTweetToFile = (tweet) => {
 let sendNotification = (earthquake) => {
   const restKey = process.env.OS_REST_KEY;
   const appId = process.env.OS_APP_ID;
+  let includedSegments = ["Active Users", "allmag"]
+  if (earthquake.mag >= 2.5) {
+    includedSegments.push("twofivemag");
+  } else if (earthquake.mag >= 4.5) {
+    includedSegments.push("fourfivemag");
+  }
   fetch(
     "https://onesignal.com/api/v1/notifications",
     {
@@ -152,7 +158,7 @@ let sendNotification = (earthquake) => {
       // json: true,
       body: JSON.stringify({
         app_id: appId,
-        included_segments: ["Active Users"],
+        included_segments: includedSegments,
         contents: { en: `${earthquake.mag}-${earthquake.location}` },
         headings: { en: "DEPREM" },
         data: {
