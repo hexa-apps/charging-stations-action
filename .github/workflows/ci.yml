@@ -7,7 +7,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    name: Get Earthquakes
+    name: Get Data
     if: "!contains(toJSON(github.event.commits.*.message), '[skip-ci]')"
     strategy:
       matrix:
@@ -25,12 +25,12 @@ jobs:
         yarn start
       env:
         # CI: true
-        IFTTT_WEBHOOKS_KEY: ${{ secrets.IFTTT_WEBHOOKS_KEY }}
-        IFTTT_EVENT: ${{ secrets.IFTTT_EVENT }}
-        OS_REST_KEY: ${{ secrets.OS_REST_KEY }}
-        OS_APP_ID: ${{ secrets.OS_APP_ID }}
-        CITIES_DELIMITED_WITH_SEMICOLON: ${{ secrets.CITIES_DELIMITED_WITH_SEMICOLON }}
-        MIN_MAGNITUDE: ${{ secrets.MIN_MAGNITUDE }}
+        # IFTTT_WEBHOOKS_KEY: ${{ secrets.IFTTT_WEBHOOKS_KEY }}
+        # IFTTT_EVENT: ${{ secrets.IFTTT_EVENT }}
+        # OS_REST_KEY: ${{ secrets.OS_REST_KEY }}
+        # OS_APP_ID: ${{ secrets.OS_APP_ID }}
+        # CITIES_DELIMITED_WITH_SEMICOLON: ${{ secrets.CITIES_DELIMITED_WITH_SEMICOLON }}
+        # MIN_MAGNITUDE: ${{ secrets.MIN_MAGNITUDE }}
     - name: Upload files
       uses: actions/upload-artifact@v2
       with:
@@ -39,6 +39,6 @@ jobs:
     - run: |
         git config user.name github-actions
         git config user.email github-actions@github.com
-        git add previousEarthquakes.json
+        git add .
         git diff-index --quiet HEAD || git commit -m "Add [skip-ci]"
         git push
