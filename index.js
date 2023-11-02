@@ -103,47 +103,51 @@ const result = async function () {
       city: "gaziantep",
     },
   ];
+  const stations = { type: "FeatureCollection", features: [] };
   for (let i = 0; i < urls.length; i++) {
     const { url, city, district } = urls[i];
-    const stations = { type: "FeatureCollection", features: [] };
-    fetch(url)
-      .then((res) => res.json())
-      .then((res) => {
-        console.log("success", city, district);
-        if (city === "istanbul" && district === "tuzla") {
-          stations.features = stations.features.concat(
-            res.result.records.map((station) => {
-              return {
-                type: "Feature",
-                geometry: {
-                  type: "Point",
-                  coordinates: [station.BOYLAM, station.ENLEM],
-                },
-                properties: {
-                  name: station["ENGELLI ARACI SARJ ISTASYONLARI"],
-                  address: station.ADRES,
-                },
-              };
-            })
-          );
-        } else if (city === "kocaeli") {
-          stations.features = stations.features.concat(
-            res.features.map((station) => {
-              return {
-                type: station.type,
-                geometry: station.geometry,
-                properties: {
-                  name: station.properties.adi,
-                  address: station.properties.adres,
-                },
-              };
-            })
-          );
-        }
-        writeStationsToFile(city, stations);
-      })
-      .catch((err) => console.log(city, err));
+    const res = await fetch(url).catch((err) => err);
+    if (res instanceof Error) {
+      console.log("error", city);
+      continue;
+    }
+    const json = await res.json();
+    if (json) {
+      if (city === "istanbul" && district === "tuzla") {
+        stations.features = stations.features.concat(
+          json.result.records.map((station) => {
+            return {
+              type: "Feature",
+              geometry: {
+                type: "Point",
+                coordinates: [station.BOYLAM, station.ENLEM],
+              },
+              properties: {
+                name: station["ENGELLI ARACI SARJ ISTASYONLARI"],
+                address: station.ADRES,
+                city,
+              },
+            };
+          })
+        );
+      } else if (city === "kocaeli") {
+        stations.features = stations.features.concat(
+          json.features.map((station) => {
+            return {
+              type: station.type,
+              geometry: station.geometry,
+              properties: {
+                name: station.properties.adi,
+                address: station.properties.adres,
+                city,
+              },
+            };
+          })
+        );
+      }
+    }
   }
+  writeStationsToFile("stations", stations);
 };
 
 result();
